@@ -31,7 +31,7 @@ pipeline {
 	 stage('Build') {
             steps {
 		 
-		     withCredentials([string(credentialsId: 'settings', variable: 'settings')]){
+		     withCredentials([file(credentialsId: 'settings', variable: 'settings')]){
 				sh "mvn -f pom.xml -s $settings clean install -DskipTests "     
 				}
             		
@@ -39,14 +39,14 @@ pipeline {
         } 
         stage ('Munit Test'){
         	steps {
-			withCredentials([string(credentialsId: 'settings', variable: 'settings')]){
+			withCredentials([file(credentialsId: 'settings', variable: 'settings')]){
 				sh "mvn -f pom.xml -s $settings test"     
 				}
         	      }    
         }
         stage('Functional Testing'){
         	steps {
-			withCredentials([string(credentialsId: 'settings', variable: 'settings')]){
+			withCredentials([file(credentialsId: 'settings', variable: 'settings')]){
 				sh "mvn -f pom.xml -s $settings test -Dtestfile=src/test/javarunner.TestRunner.java"     
 				}
         			
