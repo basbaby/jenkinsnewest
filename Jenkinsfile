@@ -46,7 +46,7 @@ pipeline {
         stage('Functional Testing'){
         	steps {
 			configFileProvider([configFile(fileId: "07f3e89d-0bd6-4385-9cb1-9a75ad55f621", variable: "settings")]){
-				sh "mvn -f pom.xml -s $settings test -Dtestfile=src/test/javarunner.TestRunner.java""     
+				sh "mvn -f pom.xml -s $settings test -Dtestfile=src/test/javarunner.TestRunner.java"     
 				}
         			
              	  }
