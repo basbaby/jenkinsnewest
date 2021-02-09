@@ -30,7 +30,8 @@ pipeline {
 	 
 	 stage('Build') {
             steps {
-		    configFileProvider([configFile(fileId: "07f3e89d-0bd6-4385-9cb1-9a75ad55f621", variable: "settings")]){
+		 
+		     withCredentials([string(credentialsId: 'settings', variable: 'settings')]){
 				sh "mvn -f pom.xml -s $settings clean install -DskipTests "     
 				}
             		
@@ -38,14 +39,14 @@ pipeline {
         } 
         stage ('Munit Test'){
         	steps {
-			configFileProvider([configFile(fileId: "07f3e89d-0bd6-4385-9cb1-9a75ad55f621", variable: "settings")]){
+			withCredentials([string(credentialsId: 'settings', variable: 'settings')]){
 				sh "mvn -f pom.xml -s $settings test"     
 				}
         	      }    
         }
         stage('Functional Testing'){
         	steps {
-			configFileProvider([configFile(fileId: "07f3e89d-0bd6-4385-9cb1-9a75ad55f621", variable: "settings")]){
+			withCredentials([string(credentialsId: 'settings', variable: 'settings')]){
 				sh "mvn -f pom.xml -s $settings test -Dtestfile=src/test/javarunner.TestRunner.java"     
 				}
         			
