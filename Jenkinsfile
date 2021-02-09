@@ -38,12 +38,17 @@ pipeline {
         } 
         stage ('Munit Test'){
         	steps {
-        		    sh "mvn -f pom.xml test"
+			configFileProvider([configFile(fileId: "07f3e89d-0bd6-4385-9cb1-9a75ad55f621", variable: "settings")]){
+				sh "mvn -f pom.xml -s $settings test"     
+				}
         	      }    
         }
         stage('Functional Testing'){
         	steps {
-        			sh "mvn -f pom.xml test -Dtestfile=src/test/javarunner.TestRunner.java"
+			configFileProvider([configFile(fileId: "07f3e89d-0bd6-4385-9cb1-9a75ad55f621", variable: "settings")]){
+				sh "mvn -f pom.xml -s $settings test -Dtestfile=src/test/javarunner.TestRunner.java""     
+				}
+        			
              	  }
             }
         stage('Generate Reports') {
@@ -53,13 +58,19 @@ pipeline {
             }
         stage('Archetype'){
         	steps {
-                    sh "mvn -f pom.xml archetype:create-from-project"
-                    sh "mvn -f target/generated-sources/archetype/pom.xml clean install"
+			configFileProvider([configFile(fileId: "07f3e89d-0bd6-4385-9cb1-9a75ad55f621", variable: "settings")]){
+				 sh "mvn -f pom.xml -s $settings archetype:create-from-project"
+                   		 sh "mvn -f target/generated-sources/archetype/pom.xml -s $settings clean install"    
+				}
+                   
                   } 
         	}    
         stage('Deploy to Cloudhub'){
         	steps {
-        	    	sh "mvn -f pom.xml package deploy -DskipTests -Dusername=njcdemo1 -Dpassword=Njclabs@123 -DapplicationName=jenkinsnewest-poc -Denvironment=Sandbox -DmuleDeploy"
+			configFileProvider([configFile(fileId: "07f3e89d-0bd6-4385-9cb1-9a75ad55f621", variable: "settings")]){
+				 sh "mvn -f pom.xml -s $settings package deploy -DskipTests -Dusername=njcdemo1 -Dpassword=Njclabs@123 -DapplicationName=jenkinsnewest-poc -Denvironment=Sandbox -DmuleDeploy"
+  
+				}
              	  }
             }
 	   
